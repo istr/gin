@@ -15,7 +15,7 @@ description = {
 dependencies = {
     "lua >= 5.1",
     "ansicolors",
-    "busted",
+    "busted = 1.10.0",
     "lua-cjson",
     "luasocket",
     "luafilesystem",
