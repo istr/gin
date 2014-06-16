@@ -26,8 +26,8 @@ local function nginx_command(env, nginx_conf_file_path, nginx_signal)
     if GIN_TRACE == false then devnull_logs = " 2>/dev/null" end
 
     local env_cmd = ""
-    if env ~= nil then env_cmd = "-g \"env GIN_ENV=" .. env .. ";\"" end
-    local cmd = "nginx " .. nginx_signal .. " " .. env_cmd .. " -p `pwd`/ -c " .. nginx_conf_file_path .. devnull_logs
+    if env ~= nil then env_cmd = " -g \"env GIN_ENV=" .. env .. ";\"" end
+    local cmd = "nginx" .. nginx_signal .. env_cmd .. " -p `pwd`/ -c " .. nginx_conf_file_path .. devnull_logs
 
     if GIN_TRACE == true then
         print(cmd)
@@ -41,7 +41,7 @@ local function start_nginx(env, nginx_conf_file_path)
 end
 
 local function stop_nginx(env, nginx_conf_file_path)
-    return nginx_command(env, nginx_conf_file_path, '-s stop')
+    return nginx_command(env, nginx_conf_file_path, ' -s stop')
 end
 
 
