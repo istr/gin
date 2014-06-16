@@ -20,7 +20,8 @@ describe("Settings", function()
                     local defaults = {
                         code_cache = false,
                         port = 7200,
-                        expose_api_console = true
+                        expose_api_console = true,
+                        package_path = './?.lua;$prefix/lib/?.lua;;'
                     }
 
                     assert.are.same(defaults, settings.for_environment('development'))
@@ -32,7 +33,8 @@ describe("Settings", function()
                     local defaults = {
                         code_cache = true,
                         port = 7201,
-                        expose_api_console = false
+                        expose_api_console = false,
+                        package_path = './?.lua;$prefix/lib/?.lua;;'
                     }
 
                      package.loaded['config.settings'] = false
@@ -46,7 +48,8 @@ describe("Settings", function()
                     local defaults = {
                         code_cache = true,
                         port = 80,
-                        expose_api_console = false
+                        expose_api_console = false,
+                        package_path = './?.lua;$prefix/lib/?.lua;;'
                     }
 
                     assert.are.same(defaults, settings.for_environment('production'))
@@ -58,7 +61,8 @@ describe("Settings", function()
                     local defaults = {
                         code_cache = true,
                         port = 80,
-                        expose_api_console = false
+                        expose_api_console = false,
+                        package_path = './?.lua;$prefix/lib/?.lua;;'
                     }
 
                     assert.are.same(defaults, settings.for_environment('something-else'))

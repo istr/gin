@@ -22,8 +22,7 @@ local function remove_nginx_conf(nginx_conf_file_path)
 end
 
 local function nginx_command(env, nginx_conf_file_path, nginx_signal)
-    local devnull_logs = ""
-    if GIN_TRACE == false then devnull_logs = " 2>/dev/null" end
+    local devnull_logs = (GIN_TRACE and "" or " 2>/dev/null")
 
     local env_cmd = ""
     if env ~= nil then env_cmd = " -g \"env GIN_ENV=" .. env .. ";\"" end

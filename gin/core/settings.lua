@@ -11,25 +11,29 @@ GinSettings.defaults = {
     development = {
         code_cache = false,
         port = 7200,
-        expose_api_console = true
+        expose_api_console = true,
+        package_path = './?.lua;$prefix/lib/?.lua;;'
     },
 
     test = {
         code_cache = true,
         port = 7201,
-        expose_api_console = false
+        expose_api_console = false,
+        package_path = './?.lua;$prefix/lib/?.lua;;'
     },
 
     production = {
         code_cache = true,
         port = 80,
-        expose_api_console = false
+        expose_api_console = false,
+        package_path = './?.lua;$prefix/lib/?.lua;;'
     },
 
     other = {
         code_cache = true,
         port = 80,
-        expose_api_console = false
+        expose_api_console = false,
+        package_path = './?.lua;$prefix/lib/?.lua;;'
     }
 }
 

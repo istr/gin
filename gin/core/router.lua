@@ -1,5 +1,3 @@
-package.path = './app/controllers/?.lua;' .. package.path
-
 -- dep
 local json = require 'cjson'
 
@@ -9,6 +7,8 @@ local Controller = require 'gin.core.controller'
 local Request = require 'gin.core.request'
 local Response = require 'gin.core.response'
 local Error = require 'gin.core.error'
+
+package.path = package.path .. ';' .. Gin.settings.package_path
 
 -- app
 local Routes = require 'config.routes'
