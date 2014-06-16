@@ -23,7 +23,7 @@ function SqlOrm.define_model(sql_database, table_name)
 
     function GinModel.create(attrs)
         local sql = orm:create(attrs)
-        local id = sql_database:execute_and_return_last_id(sql)
+        local id = sql_database:execute_and_return_last_id(sql, table_name)
 
         local model = GinModel.new(attrs)
         model.id = id
@@ -85,7 +85,12 @@ function SqlOrm.define_model(sql_database, table_name)
         if self.id ~= nil then
             return GinModel.delete_where({ id = self.id })
         else
-            error("cannot delete a model without an id")
+            local id_col = table_name..'_id'
+            if self[id_col] ~= nil then
+                return GinModel.delete_where({[id_col] = self[id_col]})
+            else
+                error("cannot delete a model without an id")
+            end
         end
     end
 

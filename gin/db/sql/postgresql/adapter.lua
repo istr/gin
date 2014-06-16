@@ -67,7 +67,9 @@ local function db_execute(options, db, sql)
     local resp = ngx.location.capture("/" .. location, {
        method = ngx.HTTP_POST, body = sql
     })
-    if resp.status ~= ngx.HTTP_OK or not resp.body then error("failed to query postgresql") end
+    if resp.status ~= ngx.HTTP_OK or not resp.body then
+        error("failed to query postgresql: /".. location .. ': ' .. resp.status .. ': ' .. sql)
+    end
 
     -- parse response
     local parser = require "rds.parser"
@@ -97,11 +99,12 @@ local function append_to_sql(sql, append_sql)
 end
 
 -- execute a query and return the last ID
-function PostgreSql.execute_and_return_last_id(options, sql)
+function PostgreSql.execute_and_return_last_id(options, sql, table_name)
     -- execute query and get last id
-    sql = append_to_sql(sql, " RETURNING id;")
+    local id_col = (table_name and (table_name..'_') or '') .. 'id'
+    sql = append_to_sql(sql, " RETURNING " .. id_col .. ";")
     local res = db_execute(options, db, sql)
-    return tonumber(res[1].id)
+    return tonumber(res[1][id_col])
 end
 
 return PostgreSql

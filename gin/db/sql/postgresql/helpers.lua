@@ -10,10 +10,10 @@ function PostgreSqlHelpers.location_for(options)
         'gin',
         options.adapter,
         options.host,
-        options.port,
+        (options.port or ''),
         options.database,
     }
-    return tconcat(name, '|')
+    return tconcat(name, '|'):gsub('[^%w|]', '_')
 end
 
 function PostgreSqlHelpers.execute_location_for(options)
@@ -21,7 +21,7 @@ function PostgreSqlHelpers.execute_location_for(options)
         PostgreSqlHelpers.location_for(options),
         'execute'
     }
-    return tconcat(name, '|')
+    return tconcat(name, '|'):gsub('[^%w|]', '_')
 end
 
 return PostgreSqlHelpers

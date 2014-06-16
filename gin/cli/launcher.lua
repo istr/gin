@@ -32,9 +32,14 @@ local function gin_init_databases(gin_init)
 
         if type(db) == "table" and db.options.adapter == 'postgresql' then
             local name = db.adapter.location_for(db.options)
+            local host = db.options.host
+            local port = db.options.port
+            if '/' == host:sub(1,1) then
+                host = 'unix:' .. host
+            end
             gin_init = gin_init .. [[
     upstream ]] .. name .. [[ {
-        postgres_server ]] .. db.options.host .. [[:]] .. db.options.port .. [[ dbname=]] .. db.options.database .. [[ user=]] .. db.options.user .. [[ password=]] .. db.options.password .. [[;
+        postgres_server ]] .. host .. (port and ':' .. port or '') .. [[ dbname=]] .. db.options.database .. [[ user=]] .. db.options.user .. (db.options.password and [[ password=]] .. db.options.password or '') .. [[;
     }
 ]]
         end
@@ -48,7 +53,7 @@ local function gin_init(nginx_content)
     -- gin init
     local gin_init = [[
 lua_code_cache ]] .. convert_boolean_to_onoff(Gin.settings.code_cache) .. [[;
-    lua_package_path "./?.lua;$prefix/lib/?.lua;#{= LUA_PACKAGE_PATH };;";
+lua_package_path "./?.lua;$prefix/lib/?.lua;;"; # NOTE: ;; is default package path
 ]]
 
     -- add db upstreams
@@ -122,7 +127,7 @@ function GinLauncher.nginx_conf_content()
     nginx_content = string.gsub(nginx_content, "{{GIN_PORT}}", Gin.settings.port)
     nginx_content = string.gsub(nginx_content, "{{GIN_ENV}}", Gin.env)
 
-    -- gin imit & runtime
+    -- gin init & runtime
     nginx_content = gin_init(nginx_content)
     nginx_content = gin_runtime(nginx_content)
 

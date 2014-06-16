@@ -15,10 +15,10 @@ function SqlDatabase.new(options)
     local required_options = {
         adapter = true,
         host = true,
-        port = true,
+        -- may have a unix socket in host: port = true,
         database = true,
         user = true,
-        password = true,
+        -- may have user based trust on sockets: password = true,
         pool = true
     }
     for k, _ in pairs(options) do required_options[k] = nil end
@@ -45,8 +45,8 @@ function SqlDatabase:execute(sql)
     return self.adapter.execute(self.options, sql)
 end
 
-function SqlDatabase:execute_and_return_last_id(sql)
-    return self.adapter.execute_and_return_last_id(self.options, sql)
+function SqlDatabase:execute_and_return_last_id(sql, ...)
+    return self.adapter.execute_and_return_last_id(self.options, sql, ...)
 end
 
 
