@@ -33,7 +33,8 @@ end
 
 -- read file
 function CommonHelpers.read_file(file_path)
-    local f = iopen(file_path, "rb")
+    local f, err = iopen(file_path, "rb")
+    if (nil == f) then error('could not open: ' .. file_path .. ': ' .. err) end
     local content = f:read("*all")
     f:close()
     return content
