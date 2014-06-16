@@ -24,8 +24,10 @@ end
 
 function Controller:accepted_params(param_filters, params)
     local accepted_params = {}
-    for _, param in pairs(param_filters) do
-        accepted_params[param] = params[param]
+    if params then
+        for _, param in pairs(param_filters) do
+            accepted_params[param] = params[param]
+        end
     end
     return accepted_params
 end
