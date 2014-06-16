@@ -2,7 +2,7 @@ package = "gin"
 version = "0.1.5-1"
 
 source = {
-    url = "git://github.com/ostinelli/gin.git"
+    url = "git://github.com/istr/gin.git"
 }
 
 description = {
