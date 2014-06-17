@@ -38,6 +38,30 @@ local function build_where(self, sql, attrs)
     end
 end
 
+-- join
+local function build_join(self, sql, attrs, maincol)
+    if not (attrs and attrs.table and attrs.col) then return end
+    -- TODO: check that col exists in self
+    local col = attrs.col
+    if maincol then
+        for idx, c in ipairs(maincol) do
+            if c == col then
+                maincol[idx] = self.table_name .. '.' .. c
+            end
+        end
+    end
+    tappend(sql, " LEFT JOIN ")
+    tappend(sql, attrs.table )
+    tappend(sql, " ON ")
+    tappend(sql, self.table_name)
+    tappend(sql, '.')
+    tappend(sql, col)
+    tappend(sql, '=')
+    tappend(sql, attrs.table)
+    tappend(sql, '.')
+    tappend(sql, col)
+    tappend(sql, ' ')
+end
 
 local SqlCommonOrm = {}
 SqlCommonOrm.__index = SqlCommonOrm
@@ -85,8 +109,43 @@ function SqlCommonOrm:where(attrs, options)
     -- init sql
     local sql = {}
     -- start
-    tappend(sql, "SELECT * FROM ")
+    tappend(sql, "SELECT ")
+
+    if attrs.col and ('table' ~= type(attrs.col)) then error('col spec must be a table') end
+
+    local groupby = {} -- TODO, some col/join combos may need this
+    local join = {}
+    -- join
+    if 'string' ~= type(attrs) and attrs.join then
+        for _, j in ipairs(attrs.join) do
+            build_join(self, join, j, attrs.col)
+        end
+        attrs.join = nil
+    end
+
+    -- cols
+    if attrs.col then
+        if 0 < #attrs.col then
+            local what = {}
+            for _, col in ipairs(attrs.col) do
+                tappend(what, col)
+            end
+            tappend(sql, tconcat(what,', '))
+        end
+        attrs.col = nil
+    else
+        tappend(sql, "*") -- TODO cols
+    end
+
+    -- main table
+    tappend(sql, " FROM ")
     tappend(sql, self.table_name)
+
+    -- join
+    if 0 < #join then
+        tappend(sql, tconcat(join))
+    end
+
     -- where
     build_where(self, sql, attrs)
     -- options
