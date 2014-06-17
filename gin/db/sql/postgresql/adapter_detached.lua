@@ -65,6 +65,19 @@ function PostgreSql.tables(options)
     return tables
 end
 
+-- return column names for a single table
+function PostgreSql.columns(options, table_name)
+    local sql = "SELECT column_name FROM information_schema.columns WHERE table_name ='" .. table_name .. "';"
+    local res = PostgreSql.execute(options, sql)
+    local columns = {}
+
+    for _, v in pairs(res) do
+        tappend(columns, v.column_name)
+    end
+
+    return columns
+end
+
 -- return schema as a table
 function PostgreSql.schema(options)
     local Migration = require 'gin.db.migrations'
