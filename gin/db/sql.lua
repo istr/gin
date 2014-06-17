@@ -58,6 +58,10 @@ function SqlDatabase:tables()
     return self.adapter.tables(self.options)
 end
 
+function SqlDatabase:columns(table_name)
+    return self.adapter.columns(self.options, table_name)
+end
+
 function SqlDatabase:schema()
     return self.adapter.schema(self.options)
 end
