@@ -111,16 +111,21 @@ end
 function PostgreSql.execute(options, sql)
     -- connect
     local db = postgresql_connect(options)
+
     -- execute
     local sth, row = db_execute(db, sql)
-    if row == nil then return {} end
+
     -- build res
     local res = {}
-    while row do
-        local irow = helpers.shallowcopy(row)
-        tappend(res, irow)
-        row = sth:fetch(true)
+
+    if row ~= nil then
+        while row do
+            local irow = helpers.shallowcopy(row)
+            tappend(res, irow)
+            row = sth:fetch(true)
+        end
     end
+
     -- close
     sth:close()
     postgresql_close(db)

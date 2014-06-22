@@ -101,14 +101,17 @@ function MySql.execute(options, sql)
     local db = mysql_connect(options)
     -- execute
     local sth, row = db_execute(db, sql)
-    if row == nil then return {} end
+
     -- build res
     local res = {}
-    while row do
-        local irow = helpers.shallowcopy(row)
-        tappend(res, irow)
-        row = sth:fetch(true)
+    if nil ~= row then
+        while row do
+            local irow = helpers.shallowcopy(row)
+            tappend(res, irow)
+            row = sth:fetch(true)
+        end
     end
+
     -- close
     sth:close()
     mysql_close(db)
