@@ -25,9 +25,11 @@ local function create_db(db)
     -- use default db
     db.options.database = db.adapter.default_database
     -- create
-    db:execute("CREATE DATABASE " .. db_name .. ";")
+    local ok, msg = pcall(db.execute, db, "CREATE DATABASE " .. db_name .. ";")
     -- revert db name
     db.options.database = db_name
+    if not ok then return nil, msg end
+    return true
 end
 
 local function is_database_not_found_error(err)
@@ -40,17 +42,21 @@ end
 
 local function ensure_db_and_schema_migrations_exist(db)
     local ok, tables = pcall(function() return db:tables() end)
+    local db_name = db.options.database
     if ok == false then
         if is_database_not_found_error(tables) == true then
             -- database does not exist, create
-            create_db(db)
+            local ok, msg = create_db(db)
+            if not ok then
+              error('could not create "' .. db_name .. '": ' .. (msg or 'unknown error'))
+            end
             tables = db:tables()
         else
-            error(migration_module)
+            error('could not fetch db tables from "' .. db_name .. '": ' .. (tables or 'unknown error'))
         end
     end
 
-    -- chech if exists
+    -- check if exists
     for _, table_name in pairs(tables) do
         if table_name == Migrations.migrations_table_name then
             -- table found, exit
@@ -58,7 +64,12 @@ local function ensure_db_and_schema_migrations_exist(db)
         end
     end
     -- table does not exist, create
-    db:execute(create_schema_migrations_sql)
+    local ok, msg = pcall(db.execute, db, create_schema_migrations_sql)
+    if not ok then
+      error('could not create migrations table "' .. create_schema_migrations_sql
+        .. '" in "' .. db_name .. '": ' .. (msg or 'unknown error'))
+    end
+    return ok, msg
 end
 
 function Migrations.version_already_run(db, version)
@@ -105,11 +116,15 @@ local function run_migration(direction, module_name)
         return false, version, err_message
     end
 
-    if direction == "up" then ensure_db_and_schema_migrations_exist(db) end
+    if direction == "up" then
+        ensure_db_and_schema_migrations_exist(db)
+    end
 
     -- exit if version already run
     local should_run = direction == "up"
-    if Migrations.version_already_run(db, version) == should_run then return end
+    if Migrations.version_already_run(db, version) == should_run then
+        return
+    end
 
     -- run migration
     local ok, err = pcall(function() return migration_module[direction]() end)
