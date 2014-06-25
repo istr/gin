@@ -271,7 +271,7 @@ pre {
 
           <div class="col gu8">
             <label for="method">URL</label>
-            <input type="text" name="url" id="url" class="gu8" value="http://localhost:7200/">
+            <input type="text" name="url" id="url" class="gu8" value="api/">
           </div>
 
 
