@@ -100,7 +100,7 @@ local function db_execute(db, sql)
     -- execute
     local sth = assert(db:prepare(sql))
     local ok, err = sth:execute()
-    if ok == false then error(err) end
+    if ok == false then error(err .. ': SQL: "' .. (sql or 'nil') .. '"') end
     -- get first returned row (if any)
     local ok, row = pcall(function() return sth:fetch(true) end)
     if ok == false then row = nil end
