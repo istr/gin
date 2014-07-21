@@ -70,11 +70,12 @@ function SqlOrm.define_model(sql_database, table_name)
     end
 
     function GinModel:save()
-        if self.id ~= nil then
-            local id = self.id
-            self.id = nil
-            local result = GinModel.update_where(self, { id = id })
-            self.id = id
+        local id_col = table_name..'_id'
+        if self[id_col] ~= nil then
+            local id = self[id_col]
+            self[id_col] = nil
+            local result = GinModel.update_where(self, { [id_col] = id })
+            self[id_col] = id
             return result
         else
             return GinModel.create(self)
