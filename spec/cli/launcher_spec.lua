@@ -113,7 +113,7 @@ describe("Launcher", function()
                 it("adds the upstream for the db", function()
                     local content = require('gin.cli.launcher').nginx_conf_content()
 
-                    local name = "gin|postgresql|127%.15%.22%.32%-example.com|12345|demo_development"
+                    local name = "gin|postgresql|127_15_22_32_example.com|12345|demo_development"
                     local upstream = "upstream " .. name .. " {"
                     upstream = upstream .. "%s*postgres_server 127%.15%.22%.32%-example.com:12345 dbname=demo_development user=postgresuser password=posgrespass;"
                     upstream = upstream .. "%s*}"
@@ -187,7 +187,7 @@ describe("Launcher", function()
                 it("adds the execute location for the db", function()
                     local content = require('gin.cli.launcher').nginx_conf_content()
 
-                    local name = "gin|postgresql|127%.15%.22%.32%-example.com|12345|demo_development"
+                    local name = "gin|postgresql|127_15_22_32_example.com|12345|demo_development"
                     local location = "location = /" .. name .. "|execute {"
                     location = location .. "%s*internal;"
                     location = location .. "%s*postgres_pass%s*" .. name .. ";"
