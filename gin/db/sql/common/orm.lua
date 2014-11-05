@@ -111,12 +111,12 @@ function SqlCommonOrm:where(attrs, options)
     -- start
     tappend(sql, "SELECT ")
 
-    if attrs.col and ('table' ~= type(attrs.col)) then error('col spec must be a table') end
+    if attrs and attrs.col and ('table' ~= type(attrs.col)) then error('col spec must be a table') end
 
     local groupby = {} -- TODO, some col/join combos may need this
     local join = {}
     -- join
-    if 'string' ~= type(attrs) and attrs.join then
+    if attrs and 'string' ~= type(attrs) and attrs.join then
         for _, j in ipairs(attrs.join) do
             build_join(self, join, j, attrs.col)
         end
@@ -124,7 +124,7 @@ function SqlCommonOrm:where(attrs, options)
     end
 
     -- cols
-    if attrs.col then
+    if attrs and attrs.col then
         if 0 < #attrs.col then
             local what = {}
             for _, col in ipairs(attrs.col) do
