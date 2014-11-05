@@ -53,7 +53,7 @@ local function gin_init(nginx_content)
     -- gin init
     local gin_init = [[
 lua_code_cache ]] .. convert_boolean_to_onoff(Gin.settings.code_cache) .. [[;
-lua_package_path "]] .. Gin.settings.package_path .. [["; # NOTE: ;; is default package path
+lua_package_path "]] .. (Gin.settings.package_path or ';;') .. [["; # NOTE: ;; is default package path
 ]]
 
     -- add db upstreams
