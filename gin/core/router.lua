@@ -127,7 +127,7 @@ function Router.call_controller(request, controller_name, action, params)
     setmetatable(controller_instance, {__index = matched_controller}) 
 
     -- call action
-    local ok, status_or_error, body, headers = pcall(function() return controller_instance[action](controller_instance) end)
+    local ok, status_or_error, body, headers = pcall(function() return matched_controller[action](controller_instance) end)
 
     local response
 
