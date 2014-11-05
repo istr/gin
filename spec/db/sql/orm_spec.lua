@@ -344,7 +344,7 @@ describe("SqlOrm", function()
                         options_arg = options
                         return 1
                     end
-                    model = Model.new({ id = 4, first_name = 'roberto', last_name = 'gin' })
+                    model = Model.new({ users_id = 4, first_name = 'roberto', last_name = 'gin' })
                 end)
 
                 after_each(function()
@@ -355,7 +355,7 @@ describe("SqlOrm", function()
                     local result = model:save()
 
                     assert.are.same({ first_name = 'roberto', last_name = 'gin' }, attrs_arg)
-                    assert.are.same({ id = 4 }, options_arg)
+                    assert.are.same({ users_id = 4 }, options_arg)
                     assert.are.same(1, result)
                 end)
             end)
