@@ -1,4 +1,7 @@
-package.path = './app/controllers/?.lua;' .. package.path
+local CONTROLLER_PATH = './app/controllers/?.lua;'
+if not package.path:find(CONTROLLER_PATH, 1, true) then
+	package.path = CONTROLLER_PATH .. package.path
+end
 
 -- dep
 local json = require 'cjson'
