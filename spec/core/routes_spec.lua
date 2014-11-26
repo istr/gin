@@ -90,7 +90,7 @@ describe("Routes", function()
                 assert.are.same({
                     [1] = {
                         [1] = {
-                            pattern = "^/users/([A-Za-z0-9_]+)/???$",
+                            pattern = "^/users/([A-Za-z0-9_%-]+)/???$",
                             GET = { controller = "users_controller", action = "show", params = { [1] = "id" } }
                         }
                     }
@@ -103,7 +103,7 @@ describe("Routes", function()
                 assert.are.same({
                     [1] = {
                         [1] = {
-                            pattern = "^/users/([A-Za-z0-9_]+)/messages/([A-Za-z0-9_]+)/???$",
+                            pattern = "^/users/([A-Za-z0-9_%-]+)/messages/([A-Za-z0-9_%-]+)/???$",
                             GET = { controller = "messages_controller", action = "show", params = { [1] = "user_id", [2] = "id" } }
                         }
                     }
