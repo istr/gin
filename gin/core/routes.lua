@@ -41,7 +41,7 @@ function Version:build_named_parameters(pattern)
     local params = {}
     local new_pattern = sgsub(pattern, "/:([A-Za-z0-9_]+)", function(m)
         tappend(params, m)
-        return "/([A-Za-z0-9_]+)"
+        return "/([A-Za-z0-9_%-]+)"
     end)
     return new_pattern, params
 end
