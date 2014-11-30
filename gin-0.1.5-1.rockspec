@@ -14,14 +14,14 @@ description = {
 
 dependencies = {
     "lua >= 5.1",
-    "ansicolors",
-    "busted = 1.10.0",
-    "lua-cjson",
-    "luasocket",
-    "luafilesystem",
-    "luaposix",
-    "penlight",
-    "luadbi"
+    "ansicolors = 1.0.2-3",
+    "busted = 1.11.1",
+    "lua-cjson = 2.1.0-1",
+    "luasocket = 3.0rc1-1",
+    "luafilesystem = 1.6.2-2",
+    "luaposix = 32-1",
+    "penlight = 1.3.1-1",
+    "luadbi = 0.5-1"
 }
 
 build = {
