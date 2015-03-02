@@ -26,7 +26,8 @@ function SqlOrm.define_model(sql_database, table_name)
         local id = sql_database:execute_and_return_last_id(sql, table_name)
 
         local model = GinModel.new(attrs)
-        model.id = id
+        local id_col = table_name .. '_id'
+        model[id_col] = id
 
         return model
     end
@@ -100,6 +101,5 @@ function SqlOrm.define_model(sql_database, table_name)
 
     return GinModel
 end
-
 
 return SqlOrm

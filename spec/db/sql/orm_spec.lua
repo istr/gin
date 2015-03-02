@@ -99,7 +99,7 @@ describe("SqlOrm", function()
 
             it("returns a new model", function()
                 local model = Model.create({ first_name = 'roberto', last_name = 'gin' })
-                assert.are.same({ id = 10, first_name = 'roberto', last_name = 'gin' }, model)
+                assert.are.same({ users_id = 10, first_name = 'roberto', last_name = 'gin' }, model)
             end)
         end)
 
