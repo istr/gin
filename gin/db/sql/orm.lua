@@ -74,7 +74,7 @@ function SqlOrm.define_model(sql_database, table_name)
     end
 
     function GinModel:save()
-        local id_col = table_name..'_id'
+        local id_col = table_name .. '_id'
         if self[id_col] ~= nil then
             local id = self[id_col]
             self[id_col] = nil
@@ -90,7 +90,7 @@ function SqlOrm.define_model(sql_database, table_name)
         if self.id ~= nil then
             return GinModel.delete_where({ id = self.id })
         else
-            local id_col = table_name..'_id'
+            local id_col = table_name .. '_id'
             if self[id_col] ~= nil then
                 return GinModel.delete_where({[id_col] = self[id_col]})
             else
