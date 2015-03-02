@@ -104,6 +104,13 @@ local function hit_server(request)
     return ok, response_status, response_headers, response_body
 end
 
+function IntegrationRunner.before()
+    if not IntegrationRunner.launcher then
+        IntegrationRunner.launcher = require 'gin.cli.launcher'
+        IntegrationRunner.launcher.start(Gin.env)
+    end
+end
+
 function IntegrationRunner.hit(request)
     local launcher = require 'gin.cli.launcher'
     local ResponseSpec = require 'gin.spec.runners.response'
@@ -126,13 +133,17 @@ function IntegrationRunner.hit(request)
     request = set_accept_header(request, api_version)
 
     -- start nginx
-    launcher.start(Gin.env)
+    if not IntegrationRunner.launcher then
+        launcher.start(Gin.env)
+    end
 
     -- hit server
     local ok, response_status, response_headers, response_body = hit_server(request)
 
     -- stop nginx
-    launcher.stop(Gin.env)
+    if not IntegrationRunner.launcher then
+        launcher.stop(Gin.env)
+    end
 
     if ok == nil then error("An error occurred while connecting to the test server.") end
 
@@ -144,6 +155,13 @@ function IntegrationRunner.hit(request)
     })
 
     return response
+end
+
+function IntegrationRunner.after()
+    if IntegrationRunner.launcher then
+        IntegrationRunner.launcher.stop(Gin.env)
+        IntegrationRunner.launcher = nil
+    end
 end
 
 return IntegrationRunner
