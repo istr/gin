@@ -9,3 +9,11 @@ local IntegrationRunner = require 'gin.spec.runners.integration'
 function hit(request)
     return IntegrationRunner.hit(request)
 end
+
+function before_hits()
+    IntegrationRunner.before()
+end
+
+function after_hits()
+    IntegrationRunner.after()
+end
