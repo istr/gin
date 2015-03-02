@@ -94,6 +94,16 @@ local function db_execute(options, db, sql)
         -- empty resultset
         return {}
     else
+        -- FIXME: add option to rds.parser to do this in C directly during parse step
+        local NULL = parser.null
+        for idx = 1, #rows do
+            local row = rows[idx]
+            for key, val in pairs(row) do
+                if NULL == val then
+                    row[key] = nil
+                end
+            end
+        end
         return rows
     end
 end
