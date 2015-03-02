@@ -10,13 +10,19 @@ local function tappend(t, v) t[#t+1] = v end
 local function field_and_values(quote, attrs, concat)
     local fav = {}
     for field, value in pairs(attrs) do
-        local key_pair = {}
-        tappend(key_pair, field)
-        if type(value) ~= 'number' then value = quote(value) end
-        tappend(key_pair, "=")
-        tappend(key_pair, value)
+        if true == value then
+            tappend(fav, field)
+        else
+            local key_pair = {}
+            tappend(key_pair, field)
+            if type(value) ~= 'number' then
+              value = quote(tostring(value))
+            end
+            tappend(key_pair, "=")
+            tappend(key_pair, value)
 
-        tappend(fav, tconcat(key_pair))
+            tappend(fav, tconcat(key_pair))
+        end
     end
     return tconcat(fav, concat)
 end
