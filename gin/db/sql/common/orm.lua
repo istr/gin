@@ -156,20 +156,35 @@ function SqlCommonOrm:where(attrs, options)
     build_where(self, sql, attrs)
     -- options
     if options then
+        local order = options.order
+        local limit = options.limit
+        local offset = options.offset
+        local group = options.group
+
+        -- group
+        if group ~= nil then
+            if 'table' == type(group) then
+              -- TODO
+            else
+              tappend(groupby, self.table_name .. '.' .. group)
+            end
+            tappend(sql, " GROUP BY ")
+            tappend(sql, tconcat(groupby, ', '))
+        end
         -- order
-        if options.order ~= nil then
+        if order ~= nil then
             tappend(sql, " ORDER BY ")
-            tappend(sql, options.order)
+            tappend(sql, order)
         end
         -- limit
-        if options.limit ~= nil then
+        if limit ~= nil then
             tappend(sql, " LIMIT ")
-            tappend(sql, options.limit)
+            tappend(sql, limit)
         end
         -- offset
-        if options.offset ~= nil then
+        if offset ~= nil then
             tappend(sql, " OFFSET ")
-            tappend(sql, options.offset)
+            tappend(sql, offset)
         end
     end
     -- close

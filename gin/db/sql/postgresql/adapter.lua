@@ -122,9 +122,9 @@ local function append_to_sql(sql, append_sql)
 end
 
 -- execute a query and return the last ID
-function PostgreSql.execute_and_return_last_id(options, sql, table_name)
+function PostgreSql.execute_and_return_last_id(options, sql, table_name, id_col)
     -- execute query and get last id
-    local id_col = (table_name and (table_name..'_') or '') .. 'id'
+    local id_col = id_col or (table_name and (table_name..'_') or '') .. 'id'
     sql = append_to_sql(sql, " RETURNING " .. id_col .. ";")
     local res = db_execute(options, db, sql)
     return tonumber(res[1][id_col])

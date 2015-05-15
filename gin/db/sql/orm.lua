@@ -5,9 +5,10 @@ local function tappend(t, v) t[#t+1] = v end
 
 local SqlOrm = {}
 
-function SqlOrm.define_model(sql_database, table_name)
+function SqlOrm.define_model(sql_database, table_name, id_col)
     local GinModel = {}
     GinModel.__index = GinModel
+    GinModel.__id_col = id_col
 
     -- init
     local function quote(str)
@@ -23,10 +24,10 @@ function SqlOrm.define_model(sql_database, table_name)
 
     function GinModel.create(attrs)
         local sql = orm:create(attrs)
-        local id = sql_database:execute_and_return_last_id(sql, table_name)
+        local id_col = GinModel.__id_col or table_name .. '_id'
+        local id = sql_database:execute_and_return_last_id(sql, table_name, id_col)
 
         local model = GinModel.new(attrs)
-        local id_col = table_name .. '_id'
         model[id_col] = id
 
         return model
@@ -74,7 +75,7 @@ function SqlOrm.define_model(sql_database, table_name)
     end
 
     function GinModel:save()
-        local id_col = table_name .. '_id'
+        local id_col = GinModel.__id_col or table_name .. '_id'
         if self[id_col] ~= nil then
             local id = self[id_col]
             self[id_col] = nil
@@ -90,7 +91,7 @@ function SqlOrm.define_model(sql_database, table_name)
         if self.id ~= nil then
             return GinModel.delete_where({ id = self.id })
         else
-            local id_col = table_name .. '_id'
+            local id_col = GinModel.__id_col or table_name .. '_id'
             if self[id_col] ~= nil then
                 return GinModel.delete_where({[id_col] = self[id_col]})
             else

@@ -114,13 +114,13 @@ function MySql.execute(options, sql)
 end
 
 -- execute a query and return the last ID
-function MySql.execute_and_return_last_id(options, sql, table_name)
+function MySql.execute_and_return_last_id(options, sql, table_name, id_col)
     -- get db object
     local db = mysql_connect(options)
     -- execute query
     db_execute(options, db, sql)
     -- get last id
-    local id_col = (table_name and (table_name..'_') or '') .. 'id'
+    local id_col = id_col or (table_name and (table_name..'_') or '') .. 'id'
     local res = db_execute(options, db, "SELECT LAST_INSERT_ID() AS " .. id_col .. ";")
     -- keepalive
     mysql_keepalive(db, options)
