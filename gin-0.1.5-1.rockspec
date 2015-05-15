@@ -19,7 +19,7 @@ dependencies = {
     "lua-cjson = 2.1.0-1",
     "luasocket = 3.0rc1-1",
     "luafilesystem = 1.6.2-2",
-    "luaposix = 32-1",
+    "luaposix = 33.3.1-1",
     "penlight = 1.3.1-1",
     "luadbi = 0.5-1"
 }
