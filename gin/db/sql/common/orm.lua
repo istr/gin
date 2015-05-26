@@ -56,14 +56,15 @@ local function build_join(self, sql, attrs, maincol)
             end
         end
     end
+		-- TODO check attrs.table
     tappend(sql, " LEFT JOIN ")
-    tappend(sql, attrs.table )
+    tappend(sql, attrs.table ) -- may subquery + alias
     tappend(sql, " ON ")
     tappend(sql, self.table_name)
     tappend(sql, '.')
     tappend(sql, col)
     tappend(sql, '=')
-    tappend(sql, attrs.table)
+    tappend(sql, attrs.table:match('[%w]*$')) -- strip subquery, keep alias
     tappend(sql, '.')
     tappend(sql, col)
     tappend(sql, ' ')
