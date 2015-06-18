@@ -49,24 +49,27 @@ local function build_join(self, sql, attrs, maincol)
     if not (attrs and attrs.table and attrs.col) then return end
     -- TODO: check that col exists in self
     local col = attrs.col
+    local implicitJoinColumn = not col:find('.', 1, true)
     if maincol then
         for idx, c in ipairs(maincol) do
-            if c == col then
+            if c == col and implicitJoinColumn then
                 maincol[idx] = self.table_name .. '.' .. c
             end
         end
     end
-		-- TODO check attrs.table
+    -- TODO check attrs.table
     tappend(sql, " LEFT JOIN ")
     tappend(sql, attrs.table ) -- may subquery + alias
     tappend(sql, " ON ")
-    tappend(sql, self.table_name)
-    tappend(sql, '.')
+    if implicitJoinColumn then
+        tappend(sql, self.table_name)
+        tappend(sql, '.')
+    end
     tappend(sql, col)
     tappend(sql, '=')
     tappend(sql, attrs.table:match('[%w]*$')) -- strip subquery, keep alias
     tappend(sql, '.')
-    tappend(sql, col)
+    tappend(sql, col:gsub('.*%.',''))
     tappend(sql, ' ')
 end
 
