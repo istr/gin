@@ -1,9 +1,8 @@
 # CHANGELOG
 
 ### 0.1.5:
- * Add support for PostgreSql unix socket connections
- * Make port and passwort parameter optional
- * Add support for schemata with [table_name]_id as primary key
+ * Add --trace option
+ * Freeze dependencies
 
 ### 0.1.4:
  * Bug fixes
