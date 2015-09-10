@@ -5,9 +5,22 @@ local function tappend(t, v) t[#t+1] = v end
 
 local SqlOrm = {}
 
+--- Define a model.
+-- The default primary key is set to 'id'
+-- @param sql_database the sql database instance
+-- @param table_name the name of the table to create a lightweight orm mapping for
+-- @param id_col set to true to use table_name .. '_id' as primary key,
+-- set to arbitrary string to use any other column as primary key
 function SqlOrm.define_model(sql_database, table_name, id_col)
     local GinModel = {}
     GinModel.__index = GinModel
+    if true == id_col then
+        id_col = table_name .. '_id'
+    elseif id_col then
+        id_col = tostring(id_col)
+    else
+        id_col = 'id' -- backward compatible default
+    end
     GinModel.__id_col = id_col
 
     -- init
@@ -24,8 +37,13 @@ function SqlOrm.define_model(sql_database, table_name, id_col)
 
     function GinModel.create(attrs)
         local sql = orm:create(attrs)
+<<<<<<< HEAD
         local id_col = GinModel.__id_col or table_name .. '_id'
         local id = sql_database:execute_and_return_last_id(sql, table_name, id_col)
+=======
+        local id_col = GinModel.__id_col
+        local id = sql_database:execute_and_return_last_id(sql, id_col)
+>>>>>>> table-id
 
         local model = GinModel.new(attrs)
         model[id_col] = id
@@ -75,7 +93,7 @@ function SqlOrm.define_model(sql_database, table_name, id_col)
     end
 
     function GinModel:save()
-        local id_col = GinModel.__id_col or table_name .. '_id'
+        local id_col = GinModel.__id_col
         if self[id_col] ~= nil then
             local id = self[id_col]
             self[id_col] = nil
@@ -91,7 +109,7 @@ function SqlOrm.define_model(sql_database, table_name, id_col)
         if self.id ~= nil then
             return GinModel.delete_where({ id = self.id })
         else
-            local id_col = GinModel.__id_col or table_name .. '_id'
+            local id_col = GinModel.__id_col
             if self[id_col] ~= nil then
                 return GinModel.delete_where({[id_col] = self[id_col]})
             else
