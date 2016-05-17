@@ -85,10 +85,17 @@ function Router.match(request)
     local method = request.method
 
     -- match version based on headers
-    if request.headers['accept'] == nil then error({ code = 100 }) end
+    local major_version, rest_version
+    if 'OPTIONS' == method then
+      -- CORS insanity
+      major_version = '1'
+      rest_version = ''
+    else
+      if request.headers['accept'] == nil then error({ code = 100 }) end
 
-    local major_version, rest_version = smatch(request.headers['accept'], accept_header_matcher)
-    if major_version == nil then error({ code = 101 }) end
+      major_version, rest_version = smatch(request.headers['accept'], accept_header_matcher)
+      if major_version == nil then error({ code = 101 }) end
+    end
 
     local routes_dispatchers = Routes.dispatchers[tonumber(major_version)]
     if routes_dispatchers == nil then error({ code = 102 }) end
